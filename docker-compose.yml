@@ -1,0 +1,22 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: docker/server/Dockerfile
+    command: bash -c "docker-php-entrypoint apache2-foreground"
+    volumes:
+      - ./server/app:/var/www/html:cached
+      - ./data/server:/data
+    ports:
+      - "8080:80"
+    env_file: ./env_server
+  postgres:
+    image: postgres:11.19-alpine
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=root
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432"
